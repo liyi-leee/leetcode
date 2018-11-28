@@ -1,0 +1,154 @@
+bool isNumber(char* s) {
+    int ch_plus=0; 
+    int index_plus[2];
+    int ch_minus=0;
+    int index_minus[2];
+    int ch_point=0, index_point=0;
+    int ch_e=0, index_e=0;
+    int ch_space=0, index_space, bs=0, as=0;
+    int ch_alpha=0, index_alpha=0;
+    int ch_number=0;
+    int i=0;
+    
+    while(*(s+i) != '\0'){
+        if(*(s+i) == '+' ){
+            if(ch_plus == 2){
+                return false;
+            }
+            
+            index_plus[ch_plus]=i;
+            ch_plus++;
+            
+            if(ch_plus == 1){
+                if(index_plus[0] != 0){
+                    if(*(s+index_plus[0]-1) !='e' && *(s+index_plus[0]-1) !=' ')
+                        return false;
+                    else if(*(s+index_plus[0]+1) =='\0')
+                        return false;
+                }
+            }
+            if(ch_plus == 2){
+                if(*(s+index_plus[1]-1) !='e'){
+                        return false;
+                }
+                else if(*(s+index_plus[1]+1) =='\0')
+                        return false;
+            }
+        }
+        else if(*(s+i) == '-'){
+            if(ch_minus == 2){
+                return false;
+            }
+            
+            index_minus[ch_minus]=i;
+            ch_minus++;
+            if(ch_minus == 1){
+                if(index_minus[0] != 0){
+                    if(*(s+index_minus[0]-1) !='e' && *(s+index_minus[0]-1) !=' ')
+                        return false;
+                    else if(*(s+index_minus[0]+1) =='\0')
+                        return false;
+                }
+            }
+            if(ch_minus == 2){
+                if(*(s+index_minus[1]-1) !='e'){
+                        return false;
+                }
+                else if(*(s+index_minus[1]+1) =='\0')
+                        return false;
+            }
+        }
+        else if(*(s+i) == '.'){
+            ch_point++;
+            index_point=i;
+            if(ch_point == 1){
+                if(ch_e != 0){
+                    if(index_e < index_point){
+                        return false;
+                    }
+                }
+                if(index_point == 0){
+                    if(*(s+index_point+1) < '0' || *(s+index_point+1) > '9' ){
+                        return false;
+                    }
+                }
+                else {
+                    if((*(s+index_point-1) < '0' || *(s+index_point-1) > '9') \
+                       && *(s+index_point-1) != ' ' \
+                       && *(s+index_point-1) != '+' \
+                       && *(s+index_point-1) != '-'){
+                        return false;
+                    }
+                    else if((*(s+index_point+1) < '0' || *(s+index_point+1) > '9') \
+                            && *(s+index_point+1) != '\0' \
+                            && *(s+index_point+1) != ' ' \
+                            && *(s+index_point+1) != 'e' \
+                            && *(s+index_point+1) != 'E'){
+                        return false;
+                    }
+                }
+            }
+            else if(ch_point > 1){
+                return false;
+            }
+        }
+        else if(*(s+i) == 'e' || *(s+i) == 'E'){
+            ch_e++;
+            index_e=i;
+            if(ch_e == 1){
+                if(index_e == 0){
+                    return false;
+                }
+                else if(*(s+index_e+1) == '\0'){
+                    return false;
+                }
+                else if((*(s+index_e+1) < '0' || *(s+index_e+1) > '9') \
+                        && *(s+index_e+1) != '+' \
+                        && *(s+index_e+1) != '-')
+                {
+                    return false;
+                }
+                else if((*(s+index_e-1) < '0' || *(s+index_e-1) > '9') \
+                       && *(s+index_e-1) != '.'){
+                    return false;
+                }
+            }
+            else if(ch_e > 1){
+                return false;
+            }
+        }
+        else if(*(s+i) == ' '){
+            ch_space++;
+
+            if(i!=0 ){
+                if(*(s+i+1) >= '0' && *(s+i+1) <= '9' || *(s+i+1) == '.' || *(s+i+1) == '+' || *(s+i+1) == '-')
+                    as = 1;
+                else if(*(s+i+1) != '\0' && *(s+i+1) != ' ')
+                    return false;
+                
+                if((*(s+i-1) >= '0' && *(s+i-1) <= '9') || *(s+i-1) == '.')
+                    bs = 1; 
+                else if(*(s+i-1) == '+' || *(s+i-1) == '-') 
+                    return false;
+            }
+            if(as == 1 && bs == 1){
+                return false;
+            }
+                
+        }
+        else if(*(s+i) >= '0' && *(s+i) <= '9' ){
+            ch_number++;
+        }
+        else if((*(s+i) >= 'a' && *(s+i) <= 'z' && *(s+i) != 'e') || \
+                (*(s+i) >= 'A' && *(s+i) <= 'Z' && *(s+i) != 'E')){
+            ch_alpha++; 
+            return false;
+        }
+        i++;
+    }  
+    
+    if(ch_space == i  || ch_point == i || ch_number == 0)
+        return false;
+    
+    return true;
+}
