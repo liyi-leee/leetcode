@@ -5,6 +5,13 @@
  *     int y;
  * }
  */
+ /*
+ pit: 
+ 1. 用斜率判断共线存在float的比较问题，采用三点共线；
+ 2. 使用int存在大数相乘溢出的问题；
+ 3. 要对重复点做特殊处理；
+ */
+ 
 int maxPoints(struct Point* points, int pointsSize) {
     int i,j,k,cl=0, cr=0;
     int max=0,repeat=0;
