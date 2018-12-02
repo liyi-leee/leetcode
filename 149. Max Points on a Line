@@ -5,77 +5,44 @@
  *     int y;
  * }
  */
-#include <sdtbool.h>
-
-struct Line {
-    float a;
-    float b;
-    int x;
-    bool bx;
-};
 int maxPoints(struct Point* points, int pointsSize) {
-    int i=0, j=0, k=0;
-    int tline = pointsSize*(pointsSize-1)/2;
-    struct Line* lines;
-    int *count;
-    int max=0, max_index=0,max_p_num=0;
-    if(pointsSize <= 1){
-        return pointsSize<0?0:pointsSize;
+    int i,j,k,cl=0, cr=0;
+    int max=0,repeat=0;
+    
+    if(pointsSize <= 2){
+        return pointsSize;
     }
     
-    lines = (struct Line *)malloc(sizeof(*lines)*tline);
-    count = (int *)malloc(sizeof(*count)*tline);
-    
-    memset(lines, 0, sizeof(*lines)*tline);
-    memset(count, 0, sizeof(*count)*tline);
-    
-    for(i=0; i<pointsSize-1; i++){
+    for(i=0;i<pointsSize-1;i++){
+        cr = 0;
         for(j=i+1; j<pointsSize; j++){
-            if(points[j].x == points[i].x){
-                    lines[k].a = 0; 
-                    lines[k].b = 0;
-                    lines[k].x = points[j].x;
-                    lines[k].bx = true;
+            if(points[i].x == points[j].x && \
+               points[i].y == points[j].y){
+                cr++;
+                continue;
             }
-            else{
-                lines[k].a = (float)(points[j].y - points[i].y)\
-                            /(points[j].x - points[i].x);
-                lines[k].b = (float)(points[j].x*points[i].y - points[i].x*points[j].y)\
-                            /(points[j].x - points[i].x);
-                lines[k].x = 0;
-                lines[k].bx = false;
+            cl=0;
+            for(k=0; k<pointsSize; k++){
+                if( (long)points[i].x*(long)points[j].y + \
+                    (long)points[j].x*(long)points[k].y + \
+                    (long)points[k].x*(long)points[i].y - \
+                    (long)points[i].x*(long)points[k].y - \
+                    (long)points[j].x*(long)points[i].y - \
+                    (long)points[k].x*(long)points[j].y == 0){ 
+                    cl++;
+                }
             }
-            k++;
+            
+            if(cl > max){
+                max = cl;
+            }
+        }
+        
+        if(cr > repeat){
+            repeat = cr;
         }
     }
+    printf("\n");
     
-    for(i=0; i<k; i++){
-        for(j=0; j<k; j++){
-            if(lines[i].a == lines[j].a && \
-               lines[i].b == lines[j].b && \
-               lines[i].x == lines[j].x){
-               count[i]++;
-            }
-        }
-        if(max < count[i]){
-            max = count[i];
-            max_index = i;
-            //printf("a:%f, b:%f, x:%d\n", lines[i].a, lines[i].b, lines[i].x);
-        }
-    }
-    for(i=0; i<pointsSize; i++){
-        //printf("[%d,%d],",points[i].x, (int) (lines[max_index].a * points[i].x + lines[max_index].b));
-
-        if(lines[max_index].a==0 && lines[max_index].b == 0 && lines[max_index].bx){
-            if(lines[max_index].x == points[i].x)
-                max_p_num++;
-        }
-        else if((lines[max_index].a*points[i].x+lines[max_index].b) == points[i].y){
-             max_p_num++;
-        }
-           
-    }
-    free(lines);
-    free(count);
-    return max_p_num;
+    return repeat>max?repeat+1:max;
 }
