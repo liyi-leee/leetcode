@@ -1,0 +1,50 @@
+int myAtoi(char* str) {
+    int i=0;
+    int sign=0;
+    int start=0;
+    unsigned long long num=0;
+    while(*(str+i) != '\0'){
+        if(*(str+i) == ' '){
+            if(start == 1){
+                break;
+            }
+            i++;
+            continue;
+        }
+        else if(*(str+i) == '-'){
+            if(start == 1)
+                break;
+            sign = 1;
+            start = 1;
+            i++;
+        }
+         else if(*(str+i) == '+'){
+            if(start == 1)
+                break;
+            sign = 0;
+            start = 1;
+            i++;
+        }
+        else if(*(str+i) > '9' || *(str+i) < '0')
+        {
+            break;
+        }
+        else{
+            start = 1;
+
+            if((num*10 + (*(str+i) -0x30)) < num){
+                return sign==1?-2147483648:2147483647;
+            }
+            num = num*10 + (*(str+i) -0x30);
+
+            i++;
+        }
+    }
+    printf("%ld", num);
+    if(sign==0 && num > 2147483647)
+        num = 2147483647;
+    else if(sign==1 && num > 2147483648)
+        num = -2147483648;
+    
+    return sign==1?num*-1:num;
+}
