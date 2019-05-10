@@ -1,4 +1,4 @@
-//take too long time
+//C take too long time
 
 int lengthOfLongestSubstring(char * s){
     int i,j,start=0;
@@ -33,3 +33,35 @@ int lengthOfLongestSubstring(char * s){
 
     return max_len;
 }
+
+//python V1 take too long time
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        slen = len(s)
+        tail = 0
+        head = 0
+        sub_len = 0
+        max_len = 0;
+
+        while tail < slen:
+            head = tail + 1
+            for c in s[head:]:
+                if c in s[tail:head]:
+                    break
+                else:
+                    head = head + 1
+
+            sub_len = head - tail
+            if sub_len > max_len:
+                max_len = sub_len
+            tail = tail + 1
+
+        return max_len
+
+
+
+
