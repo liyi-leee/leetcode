@@ -1,4 +1,4 @@
-//C take too long time
+//C V1 take too long time
 
 int lengthOfLongestSubstring(char * s){
     int i,j,start=0;
@@ -63,5 +63,40 @@ class Solution(object):
         return max_len
 
 
+// C v2 base python v1
+int lengthOfLongestSubstring(char * s){
+    int head=0, tail = 0;
+    int sub_len=0, max_len = 0;
+    int len = strlen(s);
+    int i, repeat=0;
+    
+    while(tail < len){
+        head = tail + 1;
+        while(head < len){
+            for(i=tail; i<head; i++){
+                if(s[i] == s[head]){
+                    repeat=1;
+                    break;
+                }
+            }
+            if(repeat == 1){
+                repeat=0;
+                break;
+            }
+            else{
+                head++;
+            }
+            
+        }
+        
+        sub_len = head - tail;
+        if(sub_len > max_len){
+            max_len = sub_len;
+        }
+        tail++;
+    }
 
+
+    return max_len;
+}
 
