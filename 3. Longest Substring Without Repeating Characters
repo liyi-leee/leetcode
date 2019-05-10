@@ -1,0 +1,35 @@
+//take too long time
+
+int lengthOfLongestSubstring(char * s){
+    int i,j,start=0;
+    int len = strlen(s);
+    int sub_len = 0, max_len = 0;
+    char * sub =(char *) malloc(len);
+    memset(sub, len, '\0');
+
+    for(start=0; start<len; start++){
+        for(i=start; i<len; i++){
+            for(j=0; j<sub_len; j++){
+                if(sub[j] == s[i]){
+                    if(sub_len >= max_len)
+                        max_len = sub_len;
+
+                    if(sub_len > len-sub_len)
+                        continue;
+                    sub_len=0;
+                }
+            }
+
+            sub[sub_len] = s[i];
+            sub_len++;
+        }
+        if(sub_len >= max_len){
+            max_len = sub_len;
+        }
+        sub_len = 0;
+    }
+
+    free(sub);
+
+    return max_len;
+}
