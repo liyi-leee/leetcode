@@ -1,0 +1,28 @@
+from copy import deepcopy
+
+class Solution(object):
+    def simplifyPath(self, path):
+        """
+        :type path: str
+        :rtype: str
+        """
+        sl = path.split('/')
+
+        temp=deepcopy(sl)
+        simple=[]
+
+        for str in sl:
+            if str == '':
+                temp.remove(str)
+            elif str == '.':
+                temp.remove(str)
+
+        for str in temp:
+            if str == '..':
+                if simple:
+                    simple.pop()
+            else:
+                simple.append(str)
+
+        return '/'+'/'.join(simple)
+        
