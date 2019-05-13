@@ -1,0 +1,71 @@
+int out2buf(char * buf, int *len, char* str2output) {
+    int buf_head = *len;
+    int str_len = strlen(str2output);
+    int ret;
+
+    ret = sprintf(buf+buf_head, "%s ", str2output);  //hundred
+    buf_head = buf_head+ret;
+
+    *len = buf_head;
+    return ret;
+}
+
+char * numberToWords(int num){
+    char * a[10] = {"Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"};
+    char * b[10] = {"Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen",\
+        "Sixteen","Seventeen","Eighteen", "Nineteen"};
+    char * c[10] = {"Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"};
+    char * d[5] = {"Billion", "Million","Thousand","Hundred"};
+    int x[5]={1000000000, 1000000, 1000, 100, 10};
+    int input, temp1, temp2, temp3, i;
+    int len = 0;
+    char *words = (char *) malloc(2000);
+
+    input = num;
+
+    for(i=0; i<4; i++){
+        temp1 = input / x[i];
+        if(temp1 != 0 || i==3){
+            //check digit hundred
+            if(i==3){
+                temp2 = input/100;
+                temp3 = input%100;
+            }
+            else{
+                temp2 = temp1/100;
+                temp3 = temp1%100;
+            }
+
+            if(temp2 != 0){
+                out2buf(words, &len, a[temp2]);
+                out2buf(words, &len, d[3]);
+            }
+            if(temp3 < 10){
+                if(temp3%10 == 0){
+                    if(num==0)
+                        out2buf(words, &len, a[0]);
+                }
+                else
+                    out2buf(words, &len, a[temp3%10]);
+            }
+            else if(temp3 < 20)
+                out2buf(words, &len, b[temp3%10]);
+            else{
+                out2buf(words, &len, c[temp3/10-2]);
+                if(temp3%10 == 0){
+                    if(num == 0 )
+                        out2buf(words, &len, a[0]);
+                }
+                else
+                    out2buf(words, &len, a[temp3%10]);
+            }
+
+            if(i<3)
+                out2buf(words, &len, d[i]);
+        }
+
+        input = input%x[i];
+    }
+    words[len-1]='\0';
+    return words;
+}
