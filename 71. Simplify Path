@@ -1,3 +1,5 @@
+#python
+
 from copy import deepcopy
 
 class Solution(object):
@@ -26,3 +28,124 @@ class Solution(object):
 
         return '/'+'/'.join(simple)
         
+#C
+
+enum STATE
+{   
+    IDLE=100,
+    GETN,
+    GOUP,
+    SKIP,
+    STAY,
+    GEND,
+    DONE,
+};
+
+char * simplifyPath(char * path){
+    int i=0, j=0;
+    int ilen = strlen(path)+1;
+    int olen = 0;
+    enum STATE state = IDLE;
+    char *simple = (char *) malloc(ilen);    
+
+    while(state != DONE){
+        if(state == IDLE){
+            if(path[i] == '/'){
+                simple[olen++] = path[i++];
+                state = GETN;
+            }
+            else
+                return NULL;
+        }
+        else if(state == GETN){
+            if(path[i] == '/'){
+                i++;
+            }
+            else if(path[i] == '.'){
+                i++;
+                state = STAY;
+            }
+            else if(path[i] == '\0'){
+                if(olen>1){
+                    olen-=1;
+                    simple[olen] = '\0';
+                }
+                state = DONE;
+            }
+            else{
+                simple[olen++] = path[i++];
+                state = GEND;
+            }
+        }
+        else if(state == STAY){
+            if(path[i] == '\0'){
+                if(olen>1){
+                    olen-=1;
+                    simple[olen] = '\0';
+                }
+                state = DONE;
+            }
+            else if(path[i] == '/'){
+                i++;
+                state = GETN;
+            }
+            else if(path[i] == '.'){
+                i++;
+                state = GOUP;
+            }
+            else{
+                simple[olen++] = '.';
+                simple[olen++] = path[i++];
+                state = GEND;
+            }
+        }
+        else if(state == GOUP){
+            if(path[i] == '/' || path[i] == '\0'){
+                if(olen == 1){
+                    state = GETN;
+                }
+                else{
+                    for(j=olen-2; j>=0; j--){
+                        if(simple[j] == '/'){
+                            break;
+                        }
+                    }
+                    if(path[i] == '\0'){
+                        if(j==0)
+                            olen = 1;
+                        else
+                            olen = j;
+                        state = DONE;
+                    }   
+                    else{
+                        olen = j+1;
+                        state = GETN;
+                    }
+                }
+            }
+            else{
+                simple[olen++] = '.';
+                simple[olen++] = '.';
+                simple[olen++] = path[i++];
+                state = GEND;
+            }
+
+        }
+        else if(state == GEND){
+            if(path[i] == '\0'){
+                state = DONE;
+            }
+            else if(path[i] == '/'){
+                state = GETN;
+                simple[olen++] = path[i++];
+            }
+            else{
+                simple[olen++] = path[i++];
+            }
+        }
+        
+        simple[olen]='\0';
+    }
+    
+    return simple;
+}
