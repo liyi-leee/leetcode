@@ -1,0 +1,50 @@
+char * intToRoman(int num){
+    char tens[4] = {'M', 'C', 'X', 'I'};
+    char half[3] = {'D', 'L', 'V'};
+    char split[4];
+    
+    int in=num, i=3, j=0;
+    int head=0, ret;
+    int n;
+    
+    static char roman[32];
+        
+    for(i=0; i<4; i++){
+        n = pow(10, 3-i);
+        split[i] = in/n;
+        
+        if(split[i] < 4){
+            for(j=0; j<split[i]; j++){
+                ret = sprintf(roman+head, "%c", tens[i]);
+                head += ret;
+            }
+        }
+        else if(split[i] == 4){
+            ret = sprintf(roman+head, "%c", tens[i]);
+            head += ret;
+            ret = sprintf(roman+head, "%c", half[i-1]);
+            head += ret;
+        }
+        else if(split[i] == 5){
+            ret = sprintf(roman+head, "%c", half[i-1]);
+            head += ret;
+        }
+        else if(split[i] < 9){
+            ret = sprintf(roman+head, "%c", half[i-1]);
+            head += ret;   
+            for(j=0; j<(split[i]-5); j++){
+                ret = sprintf(roman+head, "%c", tens[i]);
+                head += ret;
+            }
+        }
+        else if(split[i] == 9 ){
+            ret = sprintf(roman+head, "%c", tens[i]);
+            head += ret;
+            ret = sprintf(roman+head, "%c", tens[i-1]);
+            head += ret;
+        }
+        in = in - in/n*n;
+    }
+   
+    return roman; 
+}
