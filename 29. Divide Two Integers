@@ -1,0 +1,33 @@
+int divide(int dividend, int divisor){
+    long in = dividend;
+    long div = divisor;
+    long temp, mul, count=0;
+    
+    in = in<0?-in:in;
+    div = div<0?-div:div;
+    
+    if(div == 1)
+        count = in;
+    else{
+        while(in >= div){
+            temp = div, mul = 1;
+            while (in >= (temp << 1)){
+                temp <<= 1;
+                mul <<= 1;
+            }
+            in -= temp;
+            count += mul;
+        }
+    }
+    
+    
+    if((dividend>0 && divisor<0) || (dividend<0 && divisor>0))
+        count = -count;
+   
+    if(count < -2147483648 || count > 2147483647 ){
+            count = 2147483647;
+    }
+    
+    return count;
+}
+
