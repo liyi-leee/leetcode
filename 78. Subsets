@@ -1,0 +1,41 @@
+/**
+ * Return an array of arrays of size *returnSize.
+ * The sizes of the arrays are returned as *returnColumnSizes array.
+ * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
+ */
+int** subsets(int* nums, int numsSize, int* returnSize, int** returnColumnSizes){
+    int nsub = (int)pow(2, numsSize);
+    int **ss=(int **)malloc(sizeof(*ss)*nsub);
+    int *in = (int *)malloc(sizeof(*in)*numsSize);
+    int tlen=0, index=0, i, j;
+    
+    *returnColumnSizes=(int *)malloc(sizeof(**returnColumnSizes)*nsub);
+    *returnSize = nsub;
+    
+    for(i=0; i<nsub; i++){
+        tlen=0;
+        for(j=0; j<numsSize; j++){
+            in[j] = (i>>j) & 0x1;
+            if(in[j] !=0)
+                tlen++;
+        }
+        (*returnColumnSizes)[i] = tlen;
+        
+        if(tlen != 0)
+            ss[i] = (int *)malloc(sizeof(int)*tlen);
+        else
+            ss[i] = NULL;
+
+        index = 0;
+        
+        for(j=0; j<numsSize; j++){
+            if( in[j] != 0 )
+                ss[i][index++] = nums[j];
+        }   
+    }
+    
+    free(in);
+
+    return ss;
+}
+
