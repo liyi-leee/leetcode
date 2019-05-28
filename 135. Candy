@@ -1,0 +1,61 @@
+//method 1
+
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int i;
+        vector<long> distribute(ratings.size(),1);   //首先初始化每个人一个糖果
+        long sum=0;
+
+       //从左向右遍历，如果右边的小盆友的等级高，右边加一个糖果
+        for(i=0; i<ratings.size()-1; i++){
+            if(ratings[i] < ratings[i+1])
+                distribute[i+1] = distribute[i] + 1;
+        }
+
+        //从右向左遍历，如果相邻两个左边的等级高，而左边的糖果不多于右边的话，则左边为右边糖果数加一
+        for(i=ratings.size()-1; i>0; i--){
+            if(ratings[i-1] > ratings[i] && distribute[i-1] <= distribute[i])
+                distribute[i-1] = distribute[i] + 1;
+        }
+
+        for(i=0; i<ratings.size(); i++){
+            sum += distribute[i];
+        }
+
+        return sum;
+    }
+};
+
+
+//method 2
+
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int res = 1, pre = 1, cnt = 0;
+        for (int i = 1; i < ratings.size(); ++i) {
+            if(ratings[i] >= ratings[i-1]){ //等级递增
+                if(cnt > 0){                //开始递增前是在等级递减
+                    res += (cnt+1)*cnt/2;   //等差为1的序列求和为分配的蜡烛总数
+                    if(cnt >= pre) res += cnt - pre + 1;              //如果递减的序列比之前递增序列长，需要增加之前递增序列的最后一个
+                    cnt = 0;
+                    pre = 1;                                          //前一个递增序列在之后的递减序列处理完成后重置
+                }
+                pre = (ratings[i] == ratings[i - 1]) ? 1 : pre + 1;   //递增序列，如果等级相等，分配一个，否则多分配一个
+                res += pre;                                           //持续递增
+            }
+            else{  //如果等级在递减，计数
+                cnt++;
+            }
+        }
+        
+        处理最后是一个递减序列的情况
+        if (cnt > 0) {
+            res += cnt * (cnt + 1) / 2;
+            if (cnt >= pre) res += cnt - pre + 1;
+        }
+
+        return res;
+    }
+};
