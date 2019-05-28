@@ -24,3 +24,23 @@ int reverse(int x) {
     
     return result;
 }
+
+
+//CPP
+class Solution {
+public:
+    int reverse(int x) {
+        long r=0,in=x;
+
+        in=in>0?in:-in;
+        while(in>0){
+            r=r*10+in%10;
+            in=in/10;
+        }
+        
+        if(r > 2147483647 && x > 0 || r > 2147483648 && x<0)
+            return 0;
+        else
+            return x>0?r:-r;
+    }
+};
