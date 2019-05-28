@@ -1,42 +1,32 @@
 class Solution {
 public:
+    void strsplit(string &s, vector<int>& v, string& c)
+    {
+        string::size_type pos1, pos2;
+
+        pos2 = s.find(c);
+        pos1 = 0;
+        while(string::npos != pos2)
+        {
+            v.push_back(atoi(s.substr(pos1).c_str()));
+
+            pos1 = pos2 + c.size();
+            pos2 = s.find(c, pos1);
+            cout << v.back() << ',';
+        }
+        if(pos1 != s.length())
+            v.push_back(atoi(s.substr(pos1).c_str()));
+    }
+
     
     int compareVersion(string version1, string version2) {
         vector<int> v1, v2;
-        string::size_type pos1, pos2;
-        
+       
         string c=".";
-        pos2 = version1.find(c);
-        pos1 = 0;
-        while(string::npos != pos2)
-        {
-            v1.push_back(atoi(version1.substr(pos1).c_str()));
-
-            pos1 = pos2 + c.size();
-            pos2 = version1.find(c, pos1);
-            cout << v1.back() << ',';
-        }
-        if(pos1 != version1.length())
-            v1.push_back(atoi(version1.substr(pos1).c_str()));
         
-        cout << v1.back() << endl;
-        
-        pos2 = version2.find(c);
-        pos1 = 0;
-        while(string::npos != pos2)
-        {
-            v2.push_back(atoi(version2.substr(pos1).c_str()));
-
-            pos1 = pos2 + c.size();
-            pos2 = version2.find(c, pos1);
-            
-            cout << v2.back() << ',';
-        }
-        if(pos1 != version2.length())
-            v2.push_back(atoi(version2.substr(pos1).c_str()));
-        
-        cout << v2.back() << endl;
-        
+        strsplit(version1, v1, c);
+        strsplit(version2, v2, c);
+       
         for(int i=0; i<min(v1.size(), v2.size()); i++){
             if(v1[i] > v2[i])
                 return 1;
