@@ -1,0 +1,99 @@
+//C
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+int* preorderTraversal(struct TreeNode* root, int* returnSize){
+    
+    int *preorder=NULL, *tmp=NULL, *plar=NULL, *prar=NULL;
+    int sl=0, sr=0, sz=0, sp=0;
+    struct TreeNode* pl;
+    struct TreeNode* pr;
+    
+    if(root != NULL){
+        pl = root->left;
+        pr = root->right;
+        
+        sz = 1;
+        preorder = malloc(sz*sizeof(int));
+        *preorder = root->val;
+        
+        if(pl != NULL){
+            plar = preorderTraversal(pl, &sl);
+            if(plar != NULL){
+                sp = sz;
+                sz += sl;
+                tmp = realloc(preorder, sz*sizeof(int));
+                preorder = tmp;
+                memcpy(preorder+sp, plar, sl*sizeof(int));
+                free(plar);
+            }
+        }
+        
+        if(pr != NULL){
+            prar = preorderTraversal(pr, &sr);
+            if(prar != NULL){
+                sp = sz;
+                sz += sr;
+                tmp = realloc(preorder, sz*sizeof(int));
+                preorder = tmp;
+                memcpy(preorder+sp, prar, sr*sizeof(int));
+                free(prar);
+            }
+        }
+            
+    }
+    
+    *returnSize = sz;
+    
+    return preorder;   
+
+}
+
+
+
+//c++
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        
+        vector<int> order;
+        vector<int> tmp;
+        TreeNode *p_left, *p_right;
+        
+        
+        if(root != NULL){
+            p_left = root->left;
+            p_right = root->right;
+            
+            order.push_back(root->val);
+            if(p_left != NULL){
+                tmp = preorderTraversal(p_left);
+                order.insert(order.end(), tmp.begin(), tmp.end());
+            }
+            
+            if(p_right != NULL){
+                tmp = preorderTraversal(p_right);
+                order.insert(order.end(), tmp.begin(), tmp.end());
+            }
+            
+        }
+        
+        return order;
+        
+    }
+};
